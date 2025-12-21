@@ -9,7 +9,7 @@
 
 ---
 
-## Architecture Backend PHP
+## Architecture API Backend PHP
 
 ### Stack technique
 
@@ -119,7 +119,7 @@ Exemple d'utilisation :
 
 ---
 
-## Frontend
+## Architecture APP Frontend React
 
 ### Stack technique
 
