@@ -1,8 +1,8 @@
-# namespace /WartStat
+# namespace /TemplatePhpReact
 
 # organisation
 
-dans les sous dossier de `wart-stat` on trouve des dossier de de domaine / ressource dans les quel il y a des controller dédié, des action dédié et des repository
+dans les sous dossier de `TemplatePhpReact` on trouve des dossier de de domaine / ressource dans les quel il y a des controller dédié, des action dédié et des repository
 
 - Un controleur est directement lié à une route
 

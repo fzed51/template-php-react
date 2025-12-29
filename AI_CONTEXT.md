@@ -1,8 +1,8 @@
-# Contexte IA - Projet Wart-Stat
+# Contexte IA - Projet Template-Php-React
 
 ## Vue d'ensemble du projet
 
-**Wart-Stat** est une application full-stack avec :
+**Template-Php-React** est une base d'application full-stack avec :
 - **Frontend** : React + TypeScript + Vite
 - **Backend** : API REST en PHP avec Slim Framework v4
 - **Architecture** : SPA (Single Page Application) avec API découplée
@@ -18,7 +18,7 @@
 - **Routing** : FastRoute (via Slim)
 - **Base de données** : SQLite avec PDO
 - **Autoloading** : PSR-4 via Composer
-- **Namespace principal** : `WartStat\`
+- **Namespace principal** : `TemplatePhpReact\` (à modifier)
 
 ### Structure des fichiers
 
@@ -27,7 +27,7 @@ api/
 ├── bootstrap.php      # Point d'entrée de l'application
 ├── container.php      # Configuration du conteneur DI
 ├── router.php         # Définition des routes
-└── wart-stat/         # Code métier (namespace WartStat)
+└── TemplatePhpReact/         # Code métier (namespace TemplatePhpReact)
     └── [domaines]/    # Dossiers organisés par domaine/ressource
         ├── *Controller.php  # Contrôleurs liés aux routes
         ├── *Action.php      # Actions métier centralisées
@@ -64,7 +64,7 @@ require __DIR__ . '/../../api/bootstrap.php';
 
 ### Convention d'architecture
 
-D'après `api/wart-stat/readme.md`, le projet suit une architecture DDD simplifiée :
+Le projet suit une architecture DDD simplifiée :
 
 #### Contrôleurs (Controllers)
 - **Rôle** : Gérer les requêtes HTTP et les réponses
@@ -86,18 +86,19 @@ D'après `api/wart-stat/readme.md`, le projet suit une architecture DDD simplifi
 
 ### Organisation par domaine
 
-Le code métier dans `api/wart-stat/` est organisé en sous-dossiers par domaine/ressource :
+Le code métier dans `api/TemplatePhpReact/` est organisé en sous-dossiers par domaine/ressource :
 
 ```
-api/wart-stat/
-├── [Domain1]/
-│   ├── Domain1Controller.php
-│   ├── Domain1Action.php
-│   └── Domain1Repository.php
-├── [Domain2]/
-│   ├── Domain2Controller.php
-│   └── Domain2Repository.php
-└── readme.md
+api/
+└── TemplatePhpReact/
+    ├── [Domain1]/
+    │   ├── Domain1Controller.php
+    │   ├── Domain1Action.php
+    │   └── Domain1Repository.php
+    ├── [Domain2]/
+    │   ├── Domain2Controller.php
+    │   └── Domain2Repository.php
+    └── readme.md
 ```
 
 ### Autoloading PSR-4
@@ -107,15 +108,15 @@ Dans `composer.json` :
 {
   "autoload": {
     "psr-4": {
-      "WartStat\\": "api/wart-stat/"
+      "TemplatePhpReact\\": "api/TemplatePhpReact/"
     }
   }
 }
 ```
 
 Exemple d'utilisation :
-- `WartStat\User\UserController` → `api/wart-stat/User/UserController.php`
-- `WartStat\Product\ProductRepository` → `api/wart-stat/Product/ProductRepository.php`
+- `TemplatePhpReact\User\UserController` → `api/TemplatePhpReact/User/UserController.php`
+- `TemplatePhpReact\Product\ProductRepository` → `api/TemplatePhpReact/Product/ProductRepository.php`
 
 ---
 
@@ -148,9 +149,61 @@ app/
 ├── pages/           # Pages pour chaque route
 │   ├── Home.tsx     # Page d'accueil
 │   └── NotFound.tsx # Page 404
+├── components/      # Composants réutilisables
+│   └── layouts/     # Layouts du projet
+├── hooks/           # Hooks custom (hors hooks de store)
+├── stores/          # Stores zustand et hooks associés
 ├── App.css
 ├── index.css
 └── assets/          # Ressources statiques
+```
+
+#### Dossier components
+
+Ce dossier contient les composants qui constituent les pages.
+Le sous-dossier `components/layouts` regroupe les différents layouts du projet.
+
+#### Dossier hooks
+
+Ce dossier contient tous les hooks custom. Exception : les hooks associés à un store restent dans le dossier stores.
+
+#### Dossier stores
+
+Ce dossier contient tous les stores et hooks associés pour la gestion d'état globale de l'application frontend.
+Librairie utilisée : [zustand](https://github.com/pmndrs/zustand).
+Convention : un store par domaine ou ressource principale, hooks personnalisés pour accéder aux stores.
+
+Exemple de store :
+
+```ts
+// app/stores/userStore.ts
+import { create } from 'zustand';
+
+type User = {
+  id: number;
+  name: string;
+};
+
+interface UserState {
+  users: User[];
+  addUser: (user: User) => void;
+}
+
+export const useUserStore = create<UserState>((set) => ({
+  users: [],
+  addUser: (user) => set((state) => ({ users: [...state.users, user] })),
+}));
+```
+
+Utilisation dans un composant :
+
+```tsx
+import { useUserStore } from './stores/userStore';
+
+function UserList() {
+  const users = useUserStore((state) => state.users);
+  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;
+}
 ```
 
 ---
@@ -159,14 +212,34 @@ app/
 
 ### Conventions de code à respecter
 
+#### Frontend React
+
+1. **Organisation des fichiers** :
+   - Un composant par fichier dans `app/components/`
+   - Les layouts dans `app/components/layouts/`
+   - Les pages dans `app/pages/`
+   - Les hooks custom dans `app/hooks/` (hors hooks de store)
+   - Les stores et hooks associés dans `app/stores/`
+2. **Nommage** :
+   - Composants : PascalCase (ex : `UserCard.tsx`)
+   - Hooks : préfixe `use` (ex : `useUserStore.ts`)
+   - Stores : suffixe `Store` (ex : `userStore.ts`)
+3. **Convention zustand** :
+   - Un store par domaine ou ressource principale
+   - Les hooks d'accès au store sont exportés depuis le même fichier
+4. **Routage** :
+   - Les routes sont définies dans `app/routes.tsx` et utilisent React Router DOM
+5. **Styles** :
+   - Fichiers CSS par composant ou global (`App.css`, `index.css`)
+
 #### Backend PHP
 
-1. **Namespace** : Toujours utiliser `namespace WartStat\[Domain];`
+1. **Namespace** : Toujours utiliser `namespace TemplatePhpReact\[Domain];`
 2. **Nommage des classes** :
    - Contrôleurs : `*Controller`
    - Actions : `*Action`
    - Repositories : `*Repository`
-3. **Organisation** : Créer un dossier par domaine dans `api/wart-stat/`
+3. **Organisation** : Créer un dossier par domaine dans `api/TemplatePhpReact/`
 4. **Routes** : Définir dans `api/router.php`
 5. **DI** : Configurer les dépendances dans `api/container.php`
 
@@ -175,11 +248,11 @@ app/
 ```php
 // Dans api/router.php
 return function ($app) {
-    $app->get('/users', [\WartStat\User\UserController::class, 'list']);
-    $app->get('/users/{id}', [\WartStat\User\UserController::class, 'get']);
-    $app->post('/users', [\WartStat\User\UserController::class, 'create']);
-    $app->put('/users/{id}', [\WartStat\User\UserController::class, 'update']);
-    $app->delete('/users/{id}', [\WartStat\User\UserController::class, 'delete']);
+    $app->get('/users', [\TemplatePhpReact\User\UserController::class, 'list']);
+    $app->get('/users/{id}', [\TemplatePhpReact\User\UserController::class, 'get']);
+    $app->post('/users', [\TemplatePhpReact\User\UserController::class, 'create']);
+    $app->put('/users/{id}', [\TemplatePhpReact\User\UserController::class, 'update']);
+    $app->delete('/users/{id}', [\TemplatePhpReact\User\UserController::class, 'delete']);
 };
 ```
 
@@ -187,7 +260,7 @@ return function ($app) {
 
 ```php
 <?php
-namespace WartStat\User;
+namespace TemplatePhpReact\User;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -216,7 +289,7 @@ class UserController
 
 ```php
 <?php
-namespace WartStat\User;
+namespace TemplatePhpReact\User;
 
 class UserRepository
 {
@@ -258,7 +331,7 @@ class UserRepository
 
 ```php
 <?php
-namespace WartStat\User;
+namespace TemplatePhpReact\User;
 
 class CreateUserAction
 {
@@ -306,8 +379,8 @@ return function () {
         },
         
         // Repositories and actions with autowiring
-        \WartStat\User\UserRepository::class => \DI\autowire(),
-        \WartStat\User\CreateUserAction::class => \DI\autowire(),
+        \TemplatePhpReact\User\UserRepository::class => \DI\autowire(),
+        \TemplatePhpReact\User\CreateUserAction::class => \DI\autowire(),
     ]);
     
     return $containerBuilder->build();
@@ -317,15 +390,17 @@ return function () {
 ### Commandes utiles
 
 ```bash
+# Frontend React
+npm install                         # Installer les dépendances
+npm install zustand                 # Installer zustand
+npm run dev                         # Lancer le serveur de développement
+npm run build                       # Build de production
+npm run lint                        # Linting ESLint
+npm run preview                     # Prévisualisation du build
+
 # Backend PHP
 composer install                    # Installer les dépendances
 composer dump-autoload              # Régénérer l'autoloader
-
-# Frontend
-npm install                         # Installer les dépendances
-npm run dev                         # Lancer le dev server
-
-# Serveur PHP local
 php -S localhost:8080 -t public     # Démarrer le serveur PHP
 ```
 
@@ -338,8 +413,8 @@ php -S localhost:8080 -t public     # Démarrer le serveur PHP
 
 ## Checklist pour créer une nouvelle ressource
 
-1. ☐ Créer un dossier dans `api/wart-stat/[ResourceName]/`
-2. ☐ Créer `[ResourceName]Controller.php` avec namespace `WartStat\[ResourceName]`
+1. ☐ Créer un dossier dans `api/TemplatePhpReact/[ResourceName]/`
+2. ☐ Créer `[ResourceName]Controller.php` avec namespace `TemplatePhpReact\[ResourceName]`
 3. ☐ Créer `[ResourceName]Repository.php` si besoin de persistance
 4. ☐ Créer `[ResourceName]Action.php` si logique métier complexe
 5. ☐ Enregistrer les routes dans `api/router.php`
@@ -386,7 +461,7 @@ php -S localhost:8080 -t public     # Démarrer le serveur PHP
 ### 1. Structure des fichiers
 
 ```
-api/wart-stat/Product/
+api/TemplatePhpReact/Product/
 ├── ProductController.php
 ├── ProductRepository.php
 └── CreateProductAction.php
@@ -396,7 +471,7 @@ api/wart-stat/Product/
 
 ```php
 <?php
-namespace WartStat\Product;
+namespace TemplatePhpReact\Product;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -445,7 +520,7 @@ class ProductController
 
 ```php
 <?php
-namespace WartStat\Product;
+namespace TemplatePhpReact\Product;
 
 class ProductRepository
 {
@@ -488,7 +563,7 @@ class ProductRepository
 
 ```php
 <?php
-namespace WartStat\Product;
+namespace TemplatePhpReact\Product;
 
 class CreateProductAction
 {
@@ -522,9 +597,9 @@ class CreateProductAction
 
 return function ($app) {
     // Product routes
-    $app->get('/products', [\WartStat\Product\ProductController::class, 'list']);
-    $app->get('/products/{id}', [\WartStat\Product\ProductController::class, 'get']);
-    $app->post('/products', [\WartStat\Product\ProductController::class, 'create']);
+    $app->get('/products', [\TemplatePhpReact\Product\ProductController::class, 'list']);
+    $app->get('/products/{id}', [\TemplatePhpReact\Product\ProductController::class, 'get']);
+    $app->post('/products', [\TemplatePhpReact\Product\ProductController::class, 'create']);
 };
 ```
 
@@ -538,9 +613,9 @@ return function () {
 
     $containerBuilder->addDefinitions([
         // PDO is already configured in container.php
-        \WartStat\Product\ProductRepository::class => \DI\autowire(),
-        \WartStat\Product\CreateProductAction::class => \DI\autowire(),
-        \WartStat\Product\ProductController::class => \DI\autowire(),
+        \TemplatePhpReact\Product\ProductRepository::class => \DI\autowire(),
+        \TemplatePhpReact\Product\CreateProductAction::class => \DI\autowire(),
+        \TemplatePhpReact\Product\ProductController::class => \DI\autowire(),
     ]);
 
     return $containerBuilder->build();

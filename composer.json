@@ -1,5 +1,5 @@
 {
-    "name": "fabien.sanchez/wart-stat",
+    "name": "fzed51/template-php-react",
     "type": "project",
     "require": {
         "slim/slim": "^4.15",
@@ -8,7 +8,7 @@
     },
     "autoload": {
         "psr-4": {
-            "WartStat\\": "api/wart-stat/"
+            "TemplatePhpReact\\": "api/TemplatePhpReact/"
         }
     },
     "authors": [
