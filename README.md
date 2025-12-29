@@ -1,75 +1,92 @@
-# React + TypeScript + Vite
+# Template PHP React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Template d'application full-stack moderne combinant React et PHP.
 
-Currently, two official plugins are available:
+## 🚀 Stack technique
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Frontend
+- **React** 19.2.0 avec TypeScript
+- **Vite** 7.2.4 (build tool)
+- **React Router** pour le routing
+- **Zustand** pour la gestion d'état
 
-## React Compiler
+### Backend
+- **PHP** avec Slim Framework 4.15
+- **PHP-DI** pour l'injection de dépendances
+- **SQLite** avec PDO
+- Architecture REST API
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## 📋 Prérequis
 
-Note: This will impact Vite dev & build performances.
+- **Node.js** 18+ et npm
+- **PHP** 8.1+
+- **Composer**
 
-## Expanding the ESLint configuration
+## 🔧 Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Cloner le projet**
+   ```bash
+   git clone <repository-url>
+   cd template-php-react
+   ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+2. **Installer les dépendances Frontend**
+   ```bash
+   npm install
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+3. **Installer les dépendances Backend**
+   ```bash
+   composer install
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## ⚡ Démarrage
+
+### Démarrer le serveur de développement Frontend
+```bash
+npm run dev
+```
+Accès: http://localhost:5173
+
+### Démarrer le serveur API Backend
+```bash
+php -S localhost:8080 -t public
+```
+Accès: http://localhost:8080/api
+
+## 📁 Structure du projet
+
+```
+├── app/                    # Code source React
+│   ├── components/         # Composants réutilisables
+│   ├── pages/             # Pages de l'application
+│   ├── hooks/             # Hooks personnalisés
+│   └── stores/            # Stores Zustand
+├── api/                   # Code source PHP
+│   ├── bootstrap.php      # Point d'entrée de l'API
+│   ├── container.php      # Configuration DI
+│   ├── router.php         # Définition des routes
+│   └── TemplatePhpReact/  # Code métier organisé par domaine
+└── public/                # Fichiers publics
+    └── api/
+        └── index.php      # Point d'entrée API
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📚 Documentation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Pour plus de détails sur l'architecture et les conventions, consultez [AI_CONTEXT.md](AI_CONTEXT.md).
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠️ Scripts disponibles
+
+### Frontend
+- `npm run dev` - Serveur de développement
+- `npm run build` - Build de production
+- `npm run lint` - Linting ESLint
+- `npm run preview` - Prévisualiser le build
+
+### Backend
+- `composer dump-autoload` - Régénérer l'autoloader
+
+## 📝 Licence
+
+MIT 
